@@ -1,5 +1,6 @@
 package com.example
 
+import com.example.api.configureApi
 import io.ktor.server.application.*
 import com.example.plugins.*
 
@@ -16,4 +17,5 @@ fun Application.module() {
     configureSockets()
     configureAdministration()
     configureRouting()
+    configureApi()
 }
