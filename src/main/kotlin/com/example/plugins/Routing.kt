@@ -1,5 +1,6 @@
 package com.example.plugins
 
+import com.example.api.HttpException
 import io.ktor.server.routing.*
 import io.ktor.server.response.*
 import io.ktor.server.plugins.autohead.*
@@ -17,6 +18,9 @@ fun Application.configureRouting() {
     install(Resources)
 
     install(StatusPages) {
+        exception<HttpException> { call, cause ->
+            call.respond(cause.status, cause.message ?: "Http exception")
+        }
         exception<Throwable> { call, cause ->
             call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
         }
