@@ -1,11 +1,8 @@
 package com.example.api
 
+import com.example.api.models.requests.Auth
 import com.example.api.models.User
 import io.ktor.server.application.*
-import io.ktor.server.config.yaml.*
-import io.ktor.server.http.content.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import net.mamoe.yamlkt.Yaml
@@ -19,6 +16,7 @@ object Static {
 
     @Serializable
     data class Api(
-        val users: List<User>
+        val auth: List<Auth>,
+        val profiles: List<User>
     )
 }

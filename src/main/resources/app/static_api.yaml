@@ -1,7 +1,16 @@
-users:
+auth:
   - id: 1
-    name: "user1"
+    login: "user1"
     password: "password1"
   - id: 2
-    name: "user2"
+    login: "user2"
     password: "password2"
+
+profiles:
+  - id: 1
+    name: myName
+    surname: mySurname
+  - id: 2
+    name: myName2
+    surname: mySurname2
+

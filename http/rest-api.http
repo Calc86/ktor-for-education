@@ -2,5 +2,12 @@ POST {{host}}/api/auth
 Accept: application/json
 Content-Type: application/json
 
-{"name":"user2", "password":"password2"}
+{"login":"user2", "password":"password2"}
+
+> {%
+    client.global.set("auth_token", response.body.token);
+%}
 ###
+
+GET {{host}}/api/profile
+Authorization: Bearer {{auth_token}}
