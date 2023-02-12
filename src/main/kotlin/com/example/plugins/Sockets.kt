@@ -13,6 +13,9 @@ import io.ktor.websocket.*
 import java.time.Duration
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.channels.consume
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.flow.consumeAsFlow
 
 fun Application.configureSockets() {
 
@@ -24,7 +27,8 @@ fun Application.configureSockets() {
     }
     routing {
         webSocket("/ws") { // websocketSession
-            for (frame in incoming) {
+            //incoming.consumeAsFlow()
+            incoming.consumeEach { frame ->
                 if (frame is Frame.Text) {
                     val text = frame.readText()
                     outgoing.send(Frame.Text("YOU SAID: $text"))

@@ -7,9 +7,11 @@ import io.ktor.http.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.metrics.dropwizard.*
 import com.codahale.metrics.*
+import com.example.plugins.debug.DebugLogPlugin
 import io.micrometer.prometheus.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.response.*
+import io.ktor.server.application.*
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
 import java.util.concurrent.TimeUnit
@@ -21,11 +23,14 @@ fun Application.configureMonitoring() {
         callIdMdc("call-id")
     }
     install(CallId) {
+        header("x-device")
         header(HttpHeaders.XRequestId)
+        generate(16, "abcdefghijklmnopqrstuvwxyz0123456789")    // generate if no call id in header
         verify { callId: String ->
             callId.isNotEmpty()
         }
     }
+    install(DebugLogPlugin)
 //    install(DropwizardMetrics) {
 //        Slf4jReporter.forRegistry(registry)
 //            .outputTo(this@module.log)
