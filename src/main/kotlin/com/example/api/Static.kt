@@ -9,6 +9,7 @@ import net.mamoe.yamlkt.Yaml
 
 object Static {
     fun preload(app: Application): Api {
+        // todo load only changed file
         val inputStream = app.environment.classLoader.getResourceAsStream("app/static_api.yaml")
         val data = String(inputStream.readAllBytes())
         return Yaml().decodeFromString<Api>(data)

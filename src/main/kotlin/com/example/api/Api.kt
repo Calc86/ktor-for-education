@@ -13,32 +13,52 @@ import io.ktor.server.routing.*
 import java.util.*
 
 fun Application.configureApi() {
-    val jwt = Config.jwt(this)
-    val static = Static.preload(this)
-
     routing {
-        post("/api/auth") {
-            val auth = call.receive<Auth>()
-            val user = static.auth.firstOrNull {
-                it.login == auth.login && it.password == auth.password
-            } ?: throw UserNotFound()
-            val token = JWT.create()
-                .withAudience(jwt.audience)
-                .withIssuer(jwt.issuer)
-                .withClaim("id", user.id)
-                .withExpiresAt(Date(System.currentTimeMillis() + jwt.ttl))
-                .sign(Algorithm.HMAC256(jwt.secret))
-            call.respond(hashMapOf("token" to token))   // {"token": "some value"}
+        route("/api") {
+            route("/v1") {
+                route("/user") {
+                    auth()
+                    profile()
+                }
+            }
         }
+    }
+}
 
-        authenticate(jwt.name) {
-            get("/api/profile") {
+val Route.jwt
+    get() = Config.jwt(this.application)
+val Route.v1Api: Static.Api
+    get() = Static.preload(this.application)
+
+fun Route.auth() {
+    post("/auth") {
+        val auth = call.receive<Auth>()
+        val user = this@auth.v1Api.auth.firstOrNull {
+            it.login == auth.login && it.password == auth.password
+        } ?: throw UserNotFound()
+        val token = JWT.create()
+            .withAudience(this@auth.jwt.audience)
+            .withIssuer(this@auth.jwt.issuer)
+            .withClaim("id", user.id)
+            .withExpiresAt(Date(System.currentTimeMillis() + this@auth.jwt.ttl))
+            .sign(Algorithm.HMAC256(this@auth.jwt.secret))
+        call.respond(hashMapOf("token" to token))   // {"token": "some value"}
+    }
+}
+
+fun Route.profile() {
+    authenticate(jwt.name) {
+        route("/profile") {
+            get {
                 val principal = call.principal<JWTPrincipal>()!!
                 val id = principal.payload.getClaim("id")?.asInt()
-                val profile = static.profiles.firstOrNull {
+                val profile = this@profile.v1Api.profiles.firstOrNull {
                     it.id == id
                 } ?: throw ProfileNotFound()
                 call.respond(profile)
+            }
+            post {
+                throw NotImplementedException()
             }
         }
     }

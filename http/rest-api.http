@@ -1,4 +1,4 @@
-POST {{host}}/api/auth
+POST {{host}}/api/v1/user/auth
 Accept: application/json
 Content-Type: application/json
 
@@ -9,5 +9,26 @@ Content-Type: application/json
 %}
 ###
 
-GET {{host}}/api/profile
+GET {{host}}/api/v1/user/profile
 Authorization: Bearer {{auth_token}}
+
+###
+
+POST {{host}}/api/v1/user/profile
+Authorization: Bearer {{auth_token}}
+
+hello
+###
+
+WEBSOCKET {{ws}}/ws
+
+hello
+===
+hello2
+===
+hello3
+=== wait-for-server
+=== wait-for-server
+=== wait-for-server
+bye
+###
