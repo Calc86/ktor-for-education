@@ -8,6 +8,7 @@ object Config {
     private const val jwtIssuer = "jwt.domain"
     private const val jwtSecret = "jwt.secret"
     private const val jwtTtl = "jwt.ttl"
+    private const val traceError = "api.trace_500_error"
 
     fun jwt(app: Application) = JWT(
         name = "auth-jwt",
@@ -18,11 +19,16 @@ object Config {
         ttl = getInt(app, jwtTtl)
     )
 
-    fun get(app: Application, name: String): String {
+    fun api(app: Application) = Api(
+        traceError = getBoolean(app, traceError)
+    )
+
+    private fun get(app: Application, name: String): String {
         return app.environment.config.property(name).getString()
     }
 
-    fun getInt(app: Application, name: String) = get(app, name).toInt()
+    private fun getInt(app: Application, name: String) = get(app, name).toInt()
+    private fun getBoolean(app: Application, name: String) = get(app, name).toBoolean()
 
     data class JWT(
         val name: String,
@@ -31,5 +37,9 @@ object Config {
         val issuer: String,
         val secret: String,
         val ttl: Int,
+    )
+
+    data class Api(
+        val traceError: Boolean
     )
 }

@@ -32,3 +32,7 @@ hello3
 === wait-for-server
 bye
 ###
+
+GET {{host}}/session/increment
+
+###
