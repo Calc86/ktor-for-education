@@ -13,10 +13,29 @@
         </discriminator>
         <sift>
             <appender name="FILE-${call-id}" class="ch.qos.logback.core.FileAppender">
-                <file>./runtime/debug/${call-id}.log</file>
-                <append>false</append>
+                <file>./runtime/debug/${call-id}.debug.log</file>
+                <append>true</append>
                 <layout class="ch.qos.logback.classic.PatternLayout">
                     <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %X{call-id} %-5level %logger{36} - %msg%n</pattern>
+                </layout>
+            </appender>
+        </sift>
+    </appender>
+    <appender name="SIFT2" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>call-id</key>
+            <defaultValue>app</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${call-id}" class="ch.qos.logback.core.FileAppender">
+                <file>./runtime/debug/${call-id}.request.log</file>
+                <filter class="com.example.plugins.debug.CallLoggingFilter">
+                    <onMatch>ACCEPT</onMatch>
+                    <onMismatch>DENY</onMismatch>
+                </filter>
+                <append>false</append>
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%d{YYYY-MM-dd HH:mm:ss} %X{from} %X{call-id} %msg%n</pattern>
                 </layout>
             </appender>
         </sift>
@@ -24,6 +43,7 @@
     <root level="trace">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="SIFT" />
+        <appender-ref ref="SIFT2" />
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
