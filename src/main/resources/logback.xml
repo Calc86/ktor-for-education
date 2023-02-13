@@ -1,11 +1,28 @@
-<configuration>
+<!-- https://logback.qos.ch/manual/configuration.html -->
+<configuration scan="true" scanPeriod="30 seconds" >
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %X{call-id} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>call-id</key>
+            <defaultValue>app</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE-${call-id}" class="ch.qos.logback.core.FileAppender">
+                <file>./runtime/debug/${call-id}.log</file>
+                <append>false</append>
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %X{call-id} %-5level %logger{36} - %msg%n</pattern>
+                </layout>
+            </appender>
+        </sift>
+    </appender>
     <root level="trace">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="SIFT" />
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
