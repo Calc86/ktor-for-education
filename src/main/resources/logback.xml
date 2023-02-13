@@ -1,4 +1,5 @@
 <!-- https://logback.qos.ch/manual/configuration.html -->
+<!-- https://www.baeldung.com/logback -->
 <configuration scan="true" scanPeriod="30 seconds" >
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
