@@ -58,7 +58,10 @@ fun Application.configureMonitoring() {
 private fun configCallLogging(config: CallLoggingConfig) = with(config) {
     logger = KtorSimpleLogger(CallLoggingFilter.name)
     level = Level.TRACE
-    filter { call -> call.request.path().startsWith("/") }
+    filter { call ->
+        call.request.path().startsWith("/")
+                && !call.request.path().startsWith("/debug")    // disable for development
+    }
     callIdMdc("call-id")
     mdc("from") { call ->
         call.request.origin.remoteHost
@@ -75,11 +78,11 @@ private fun configCallLogging(config: CallLoggingConfig) = with(config) {
                 }
             }
 
-            val body = if(httpMethod == "GET") null else call.receiveText()
+            val body = if (httpMethod == "GET") null else call.receiveText()
             "--> " + "$httpMethod $uri\n\n" +
                     "$headers\n\n" +
-                    if(body != null) "$body\n\n" else "" +
-                    "<-- $status; ${call.request.path()}; " + call.processingTimeMillis() + "ms"
+                    if (body != null) "$body\n\n" else "" +
+                            "<-- $status; ${call.request.path()}; " + call.processingTimeMillis() + "ms"
         }
     }
 }

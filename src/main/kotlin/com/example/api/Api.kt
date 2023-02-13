@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.example.Config
 import com.example.api.models.requests.Auth
+import com.example.plugins.debug.debug
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
@@ -19,6 +20,7 @@ import java.util.*
 
 fun Application.configureApi() {
     routing {
+        debug()
         route("/api") {
             get("/throw") {
                 throw ApiException(HttpStatusCode.NotImplemented, "/throw route")
