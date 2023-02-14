@@ -1,9 +1,5 @@
 package com.example.plugins.debug
 
-import io.ktor.server.application.*
-import io.ktor.server.http.content.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 import java.io.File
 
@@ -72,16 +68,5 @@ class DebugEntries(
                 request = files.map { it.path }.filter { it.contains(".request.") }.map(::mapName).toList()
             )
         }
-    }
-}
-
-fun Route.debug() {
-    get("/debug") {
-        val entries = DebugEntries.create()
-        call.respond(entries)
-    }
-    get("/debug/{id}") {
-        val id = call.parameters["id"]!!
-        call.respondFile(File(DebugEntries.dir + "/" +id))
     }
 }

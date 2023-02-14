@@ -2,6 +2,7 @@ POST {{host}}/api/v1/user/auth
 Accept: application/json
 Content-Type: application/json
 X-Device: myRandomDevice
+X-Device-Id: randomUuidOrHash
 X-Request-ID: 123
 
 {"login":"user2", "password":"password2"}

@@ -6,7 +6,7 @@
             <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %X{call-id} %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
-    <appender name="SIFT" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="DEBUG_LOG" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>call-id</key>
             <defaultValue>app</defaultValue>
@@ -21,7 +21,7 @@
             </appender>
         </sift>
     </appender>
-    <appender name="SIFT2" class="ch.qos.logback.classic.sift.SiftingAppender">
+    <appender name="DEBUG_LOG_REQUEST" class="ch.qos.logback.classic.sift.SiftingAppender">
         <discriminator>
             <key>call-id</key>
             <defaultValue>app</defaultValue>
@@ -35,15 +35,15 @@
                 </filter>
                 <append>false</append>
                 <layout class="ch.qos.logback.classic.PatternLayout">
-                    <pattern>%d{YYYY-MM-dd HH:mm:ss} %X{from} %X{call-id} %msg%n</pattern>
+                    <pattern>%d{YYYY-MM-dd HH:mm:ss} %X{from} %X{call-id} %X{device} %X{device_id} %msg%n</pattern>
                 </layout>
             </appender>
         </sift>
     </appender>
     <root level="trace">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="SIFT" />
-        <appender-ref ref="SIFT2" />
+        <appender-ref ref="DEBUG_LOG" />
+        <appender-ref ref="DEBUG_LOG_REQUEST" />
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="io.netty" level="INFO"/>
