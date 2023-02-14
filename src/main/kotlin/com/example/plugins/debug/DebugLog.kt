@@ -5,6 +5,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import io.ktor.server.auth.*
+import io.ktor.server.http.content.*
 import io.ktor.server.pebble.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.callid.*
@@ -15,7 +16,6 @@ import io.ktor.server.routing.*
 import io.ktor.util.logging.*
 import kotlinx.coroutines.runBlocking
 import org.slf4j.event.Level
-import java.io.File
 
 /**
  * https://ktor.io/docs/custom-plugins-base-api.html
@@ -87,7 +87,7 @@ class DebugLog(
                         call.respond(PebbleContent("requests.html", mapOf("requests" to entries.requests.map { it.line }.toList())))
                         //call.respond(PebbleContent("index.html", mapOf("content" to "content here")))
                     }
-                    get {
+                    get("/") {
                         entries.update()
                         entries.clean(configuration.logLimit)
                         call.respond(PebbleContent("requests.html", mapOf("requests" to entries.requests.map { it.line }.toList())))
@@ -97,6 +97,12 @@ class DebugLog(
                     }
                     get("/{id}/trace") {
                         call.respondFile(entry(call).debug)
+                    }
+                    static("/css") {
+                        resources("static/css")
+                    }
+                    static("/js") {
+                        resources("static/js")
                     }
                 }
             }
@@ -136,7 +142,8 @@ class DebugLog(
 
         private fun CallLoggingConfig.filterDebug() = filter { call ->
             call.request.path().startsWith("/")
-                    && !call.request.path().startsWith("/debug")    // disable for development
+                    && !call.request.path().startsWith("/debug")    // disable for development  // todo path from config
+                    && !call.request.path().startsWith("/static")
         }
 
         private fun CallLoggingConfig.mdcFrom() = mdc("from") { call -> call.request.origin.remoteHost }

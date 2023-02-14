@@ -18,7 +18,7 @@ fun Application.module() {
     configureMonitoring()
     configureSerialization()
     configureDatabases()
-    configureSockets()
+    //configureSockets()
     configureAdministration()
     configureRouting()
     configureApi()

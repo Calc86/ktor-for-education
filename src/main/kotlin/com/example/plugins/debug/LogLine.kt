@@ -13,9 +13,21 @@ data class LogLine(
     val deviceId: String,
     val method: String,
     val path: String,
-    val answer: String,
+    val answer: Int,
     val processing: String,
 ) {
+
+    val bootstrap: String
+        get() {
+            return when(answer) {
+                in 200..299 -> "default"
+                in 300..399 -> "info"
+                in 400..499 -> "warning"
+                in 500..599 -> "danger"
+                else -> "default"
+            }
+        }
+
     companion object {
         fun from(file: File, bufferSize: Int = 512) =
             file.bufferedReader(bufferSize = bufferSize).use { it.readLine() }?.let { from(it) }
@@ -36,7 +48,7 @@ data class LogLine(
                     deviceId = fields[5],
                     method = fields[7],
                     path = fields[8],
-                    answer = fields[10],
+                    answer = fields[10].toIntOrNull() ?: 0,
                     processing = fields[11],
                 )
             }

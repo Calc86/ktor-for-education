@@ -1,4 +1,6 @@
-table
+| {% extends "index-bootstrap.html" %}
+| {% block content %}
+table.table.table-hover.table-striped
     thead
         tr
             th.date date
@@ -15,7 +17,7 @@ table
             th.log log
     tbody
         | {% for request in requests  %}
-        tr
+        tr(class="table-{{ request.bootstrap }}")
             td.date {{ request.date }}
             td.time {{ request.time }}
             td.from {{ request.from }}
@@ -32,11 +34,4 @@ table
                 a(href="{{ request.requestId }}") log
         | {% endfor %}
 
-
-
-
-
-
-
-
-
+| {% endblock %}

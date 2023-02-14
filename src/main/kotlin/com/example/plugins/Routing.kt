@@ -27,11 +27,12 @@ fun Application.configureRouting() {
     install(StatusPages) {
         val api = Config.api(this@configureRouting)
         exception<ApiException> { call, cause ->
-            call.respond(cause.status, cause.error(false))
+            if (api.traceError) call.application.log.warn(cause.stackTraceToString())
+            call.respond(cause.status, cause.error())
         }
         exception<Throwable> { call, cause ->
-            call.respond(HttpStatusCode.InternalServerError, cause.error(api.traceError))
-            //call.respondText(text = "500: $cause", status = HttpStatusCode.InternalServerError)
+            if (api.traceError) call.application.log.warn(cause.stackTraceToString())
+            call.respond(HttpStatusCode.InternalServerError, cause.error())
         }
     }
 

@@ -1,5 +1,7 @@
 
-<table>
+{% extends "index-bootstrap.html" %}
+{% block content %}
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th class="date">date</th>
@@ -17,7 +19,7 @@
     </tr>
   </thead>
   <tbody>{% for request in requests  %}
-    <tr>
+    <tr class="table-{{ request.bootstrap }}">
       <td class="date">{{ request.date }}</td>
       <td class="time">{{ request.time }}</td>
       <td class="from">{{ request.from }}</td>
@@ -32,4 +34,4 @@
       <td class="log"><a href="{{ request.requestId }}">log</a></td>
     </tr>{% endfor %}
   </tbody>
-</table>
+</table>{% endblock %}
