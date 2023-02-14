@@ -90,7 +90,7 @@ class DebugLog(
                     get {
                         entries.update()
                         entries.clean(configuration.logLimit)
-                        call.respond(entries.requests.map { it.line })  // todo web ui
+                        call.respond(PebbleContent("requests.html", mapOf("requests" to entries.requests.map { it.line }.toList())))
                     }
                     get("/{id}") {
                         call.respondFile(entry(call).request)
