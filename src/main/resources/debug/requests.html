@@ -1,6 +1,21 @@
 
 {% extends "index-bootstrap.html" %}
 {% block content %}
+<div class="form">
+  <form>
+    <input type="text" placeholder="from" name="from" value="{{ form.from }}"/>
+    <input type="text" placeholder="requestId" name="requestId" value="{{ form.requestId }}"/>
+    <input type="text" placeholder="device" name="device" value="{{ form.device }}"/>
+    <input type="text" placeholder="deviceId" name="deviceId" value="{{ form.deviceId }}"/>
+    <input type="text" placeholder="method" name="method" value="{{ form.method }}"/>
+    <input type="text" placeholder="path" name="path" value="{{ form.path }}"/>
+    <input type="text" placeholder="answer" name="answer" value="{{ form.answer }}"/>
+    <input type="hidden" name="offset" value="{{ form.offset }}"/>
+    <input type="hidden" name="limit" value="{{ form.limit }}"/>
+    <input type="submit"/>
+    <input type="reset"/>
+  </form>
+</div>
 <table class="table table-hover table-striped">
   <thead>
     <tr>

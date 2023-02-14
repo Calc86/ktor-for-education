@@ -1,6 +1,7 @@
 package com.example.plugins.debug
 
 import com.example.api.ApiException
+import com.example.plugins.debug.DebugLog.Form.Companion.filter
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
@@ -95,11 +96,15 @@ class DebugLog(
                     get("/") {
                         entries.update()
                         entries.clean(configuration.logLimit)
-                        val list = Form.filter2(call, entries.requests.map { it.line }.requireNoNulls().toList())
+                        val form = Form.query(call)
+                        val list = form.filter(entries.requests.map { it.line }.requireNoNulls().toList())
                         call.respond(
                             PebbleContent(
                                 "requests.html",
-                                mapOf("requests" to list)
+                                mapOf(
+                                    "requests" to list,
+                                    "form" to form,
+                                )
                             )
                         )
                     }
@@ -134,24 +139,30 @@ class DebugLog(
         companion object {
             private val default = Form()
 
-            fun filter2(call: ApplicationCall, lines: List<LogLine>): List<LogLine> {
-                val form = query(call)
-//                val filter = listOf(
-//                    if (form.answer == null) true else it.answer == form.answer
-//                )
+            fun Form.filter(lines: List<LogLine>): List<LogLine> {
+                val form = this
                 return lines
-                    //.filter { if (form.answer == null) true else it.answer == form.answer }
                     .filter { line ->
                         listOf(
-                            if (form.answer == null) true else line.answer == form.answer,
+                            if (form.from.isNullOrEmpty()) true else line.from.contains(form.from),
+                            if (form.requestId.isNullOrEmpty()) true else line.requestId.contains(form.requestId),
+                            if (form.device.isNullOrEmpty()) true else line.device.contains(form.device),
+                            if (form.deviceId.isNullOrEmpty()) true else line.deviceId.contains(form.deviceId),
+                            if (form.method.isNullOrEmpty()) true else line.method.contains(form.method),
                             if (form.path.isNullOrEmpty()) true else line.path.contains(form.path),
+                            if (form.answer == null) true else line.answer == form.answer,
                         ).all { it }
                     }
             }
 
-            private fun query(call: ApplicationCall) = Form(
+            fun query(call: ApplicationCall) = Form(
                 offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: default.offset,
                 limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: default.limit,
+                from = call.request.queryParameters["from"] ?: default.from,
+                requestId = call.request.queryParameters["requestId"] ?: default.requestId,
+                device = call.request.queryParameters["device"] ?: default.device,
+                deviceId = call.request.queryParameters["deviceId"] ?: default.deviceId,
+                method = call.request.queryParameters["method"] ?: default.method,
                 path = call.request.queryParameters["path"] ?: default.path,
                 answer = call.request.queryParameters["answer"]?.toIntOrNull() ?: default.answer,
             )
