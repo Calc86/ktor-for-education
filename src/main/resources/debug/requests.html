@@ -1,52 +1,71 @@
 
 {% extends "index-bootstrap.html" %}
 {% block content %}
-<div class="form">
-  <form>
-    <input type="text" placeholder="from" name="from" value="{{ form.from }}"/>
-    <input type="text" placeholder="requestId" name="requestId" value="{{ form.requestId }}"/>
-    <input type="text" placeholder="device" name="device" value="{{ form.device }}"/>
-    <input type="text" placeholder="deviceId" name="deviceId" value="{{ form.deviceId }}"/>
-    <input type="text" placeholder="method" name="method" value="{{ form.method }}"/>
-    <input type="text" placeholder="path" name="path" value="{{ form.path }}"/>
-    <input type="text" placeholder="answer" name="answer" value="{{ form.answer }}"/>
-    <input type="hidden" name="offset" value="{{ form.offset }}"/>
-    <input type="hidden" name="limit" value="{{ form.limit }}"/>
-    <input type="submit"/>
-    <input type="reset"/>
-  </form>
-</div>
-<table class="table table-hover table-striped">
-  <thead>
-    <tr>
-      <th class="date">date</th>
-      <th class="time">time</th>
-      <th class="from">from</th>
-      <th class="requestId">requestId</th>
-      <th class="device">device</th>
-      <th class="deviceId">deviceId</th>
-      <th class="method">method</th>
-      <th class="path">path</th>
-      <th class="processing">processing</th>
-      <th class="answer">answer</th>
-      <th class="trace">trace</th>
-      <th class="log">log</th>
-    </tr>
-  </thead>
-  <tbody>{% for request in requests  %}
-    <tr class="table-{{ request.bootstrap }}">
-      <td class="date">{{ request.date }}</td>
-      <td class="time">{{ request.time }}</td>
-      <td class="from">{{ request.from }}</td>
-      <td class="requestId">{{ request.requestId }}</td>
-      <td class="device">{{ request.device }}</td>
-      <td class="deviceId">{{ request.deviceId }}</td>
-      <td class="method">{{ request.method }}</td>
-      <td class="path">{{ request.path }}</td>
-      <td class="processing">{{ request.processing }}</td>
-      <td class="answer">{{ request.answer }}</td>
-      <td class="trace"><a href="{{ request.requestId }}/trace">trace</a></td>
-      <td class="log"><a href="{{ request.requestId }}">log</a></td>
-    </tr>{% endfor %}
-  </tbody>
-</table>{% endblock %}
+<form>
+  <input type="hidden" name="offset" value="{{ form.offset }}"/>
+  <input type="hidden" name="limit" value="{{ form.limit }}"/>
+  <table class="table table-hover table-striped">
+    <thead>
+      <tr>
+        <th class="date">date</th>
+        <th class="time">time</th>
+        <th class="from">from</th>
+        <th class="requestId">requestId</th>
+        <th class="device">device</th>
+        <th class="deviceId">deviceId</th>
+        <th class="method">method</th>
+        <th class="path">path</th>
+        <th class="processing">processing</th>
+        <th class="answer">answer</th>
+        <th class="trace">trace</th>
+        <th class="log">log</th>
+      </tr>
+      <tr class="form">
+        <th>
+          <input type="submit"/>
+        </th>
+        <th>
+          <input type="reset"/>
+        </th>
+        <th>
+          <input class="col-12" type="text" placeholder="from" name="from" value="{{ form.from }}"/>
+        </th>
+        <th>
+          <input class="col-12" type="text" placeholder="requestId" name="requestId" value="{{ form.requestId }}"/>
+        </th>
+        <th>
+          <input class="col-12" type="text" placeholder="device" name="device" value="{{ form.device }}"/>
+        </th>
+        <th>
+          <input class="col-12" type="text" placeholder="deviceId" name="deviceId" value="{{ form.deviceId }}"/>
+        </th>
+        <th>
+          <input class="col-12" type="text" placeholder="method" name="method" value="{{ form.method }}"/>
+        </th>
+        <th>
+          <input class="col-12" type="text" placeholder="path" name="path" value="{{ form.path }}"/>
+        </th>
+        <th></th>
+        <th>
+          <input class="col-12" type="text" placeholder="answer" name="answer" value="{{ form.answer }}"/>
+        </th>
+      </tr>
+    </thead>
+    <tbody>{% for request in requests  %}
+      <tr class="table-{{ request.bootstrap }}">
+        <td class="date text-nowrap">{{ request.date }}</td>
+        <td class="time text-nowrap">{{ request.time }}</td>
+        <td class="from">{{ request.from }}</td>
+        <td class="requestId">{{ request.requestId }}</td>
+        <td class="device">{{ request.device }}</td>
+        <td class="deviceId">{{ request.deviceId }}</td>
+        <td class="method">{{ request.method }}</td>
+        <td class="path">{{ request.path }}</td>
+        <td class="processing">{{ request.processing }}</td>
+        <td class="answer">{{ request.answer }}</td>
+        <td class="trace"><a href="{{ request.requestId }}/trace">trace</a></td>
+        <td class="log"><a href="{{ request.requestId }}">log</a></td>
+      </tr>{% endfor %}
+    </tbody>
+  </table>
+</form>{% endblock %}

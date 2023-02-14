@@ -1,50 +1,61 @@
 | {% extends "index-bootstrap.html" %}
 | {% block content %}
-div.form
-    form
-        input(type="text", placeholder="from", name="from", value="{{ form.from }}")
-        input(type="text", placeholder="requestId", name="requestId", value="{{ form.requestId }}")
-        input(type="text", placeholder="device", name="device", value="{{ form.device }}")
-        input(type="text", placeholder="deviceId", name="deviceId", value="{{ form.deviceId }}")
-        input(type="text", placeholder="method", name="method", value="{{ form.method }}")
-        input(type="text", placeholder="path", name="path", value="{{ form.path }}")
-        input(type="text", placeholder="answer", name="answer", value="{{ form.answer }}")
-        input(type="hidden", name="offset", value="{{ form.offset }}")
-        input(type="hidden", name="limit", value="{{ form.limit }}")
-        input(type="submit")
-        input(type="reset")
-table.table.table-hover.table-striped
-    thead
-        tr
-            th.date date
-            th.time time
-            th.from from
-            th.requestId requestId
-            th.device device
-            th.deviceId deviceId
-            th.method method
-            th.path path
-            th.processing processing
-            th.answer answer
-            th.trace trace
-            th.log log
-    tbody
-        | {% for request in requests  %}
-        tr(class="table-{{ request.bootstrap }}")
-            td.date {{ request.date }}
-            td.time {{ request.time }}
-            td.from {{ request.from }}
-            td.requestId {{ request.requestId }}
-            td.device {{ request.device }}
-            td.deviceId {{ request.deviceId }}
-            td.method {{ request.method }}
-            td.path {{ request.path }}
-            td.processing {{ request.processing }}
-            td.answer {{ request.answer }}
-            td.trace
-                a(href="{{ request.requestId }}/trace") trace
-            td.log
-                a(href="{{ request.requestId }}") log
-        | {% endfor %}
+
+form
+    input(type="hidden", name="offset", value="{{ form.offset }}")
+    input(type="hidden", name="limit", value="{{ form.limit }}")
+    table.table.table-hover.table-striped
+        thead
+            tr
+                th.date date
+                th.time time
+                th.from from
+                th.requestId requestId
+                th.device device
+                th.deviceId deviceId
+                th.method method
+                th.path path
+                th.processing processing
+                th.answer answer
+                th.trace trace
+                th.log log
+            tr.form
+                th
+                    input(type="submit")
+                th
+                    input(type="reset")
+                th
+                    input(type="text", placeholder="from", name="from", value="{{ form.from }}").col-12
+                th
+                    input(type="text", placeholder="requestId", name="requestId", value="{{ form.requestId }}").col-12
+                th
+                    input(type="text", placeholder="device", name="device", value="{{ form.device }}").col-12
+                th
+                    input(type="text", placeholder="deviceId", name="deviceId", value="{{ form.deviceId }}").col-12
+                th
+                    input(type="text", placeholder="method", name="method", value="{{ form.method }}").col-12
+                th
+                    input(type="text", placeholder="path", name="path", value="{{ form.path }}").col-12
+                th
+                th
+                    input(type="text", placeholder="answer", name="answer", value="{{ form.answer }}").col-12
+        tbody
+            | {% for request in requests  %}
+            tr(class="table-{{ request.bootstrap }}")
+                td.date.text-nowrap {{ request.date }}
+                td.time.text-nowrap {{ request.time }}
+                td.from {{ request.from }}
+                td.requestId {{ request.requestId }}
+                td.device {{ request.device }}
+                td.deviceId {{ request.deviceId }}
+                td.method {{ request.method }}
+                td.path {{ request.path }}
+                td.processing {{ request.processing }}
+                td.answer {{ request.answer }}
+                td.trace
+                    a(href="{{ request.requestId }}/trace") trace
+                td.log
+                    a(href="{{ request.requestId }}") log
+            | {% endfor %}
 
 | {% endblock %}
