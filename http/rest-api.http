@@ -1,8 +1,8 @@
 POST {{host}}/api/v1/user/auth
 Accept: application/json
 Content-Type: application/json
-X-Device: myRandomDevice
-X-Device-Id: randomUuidOrHash
+X-Device: rest-api-clien
+X-Device-Id: idea
 #X-Request-ID: 123
 
 {"login":"user2", "password":"password2"}
@@ -14,11 +14,15 @@ X-Device-Id: randomUuidOrHash
 
 GET {{host}}/api/v1/user/profile
 Authorization: Bearer {{auth_token}}
+X-Device: rest-api-clien
+X-Device-Id: idea
 
 ###
 
 POST {{host}}/api/v1/user/profile
 Authorization: Bearer {{auth_token}}
+X-Device: rest-api-clien
+X-Device-Id: idea
 
 hello
 ###
@@ -37,5 +41,7 @@ bye
 ###
 
 GET {{host}}/session/increment
+X-Device: rest-api-clien
+X-Device-Id: idea
 
 ###

@@ -84,13 +84,24 @@ class DebugLog(
                     get("/test") {
                         entries.update()
                         entries.clean(configuration.logLimit)
-                        call.respond(PebbleContent("requests.html", mapOf("requests" to entries.requests.map { it.line }.toList())))
+                        call.respond(
+                            PebbleContent(
+                                "requests.html",
+                                mapOf("requests" to entries.requests.map { it.line }.toList())
+                            )
+                        )
                         //call.respond(PebbleContent("index.html", mapOf("content" to "content here")))
                     }
                     get("/") {
                         entries.update()
                         entries.clean(configuration.logLimit)
-                        call.respond(PebbleContent("requests.html", mapOf("requests" to entries.requests.map { it.line }.toList())))
+                        val list = Form.filter2(call, entries.requests.map { it.line }.requireNoNulls().toList())
+                        call.respond(
+                            PebbleContent(
+                                "requests.html",
+                                mapOf("requests" to list)
+                            )
+                        )
                     }
                     get("/{id}") {
                         call.respondFile(entry(call).request)
@@ -106,6 +117,44 @@ class DebugLog(
                     }
                 }
             }
+        }
+    }
+
+    private data class Form(
+        val offset: Int = 0,
+        val limit: Int = 10,
+        val from: String? = null,
+        val requestId: String? = null,
+        val device: String? = null,
+        val deviceId: String? = null,
+        val method: String? = null,
+        val path: String? = null,
+        val answer: Int? = null,
+    ) {
+        companion object {
+            private val default = Form()
+
+            fun filter2(call: ApplicationCall, lines: List<LogLine>): List<LogLine> {
+                val form = query(call)
+//                val filter = listOf(
+//                    if (form.answer == null) true else it.answer == form.answer
+//                )
+                return lines
+                    //.filter { if (form.answer == null) true else it.answer == form.answer }
+                    .filter { line ->
+                        listOf(
+                            if (form.answer == null) true else line.answer == form.answer,
+                            if (form.path.isNullOrEmpty()) true else line.path.contains(form.path),
+                        ).all { it }
+                    }
+            }
+
+            private fun query(call: ApplicationCall) = Form(
+                offset = call.request.queryParameters["offset"]?.toIntOrNull() ?: default.offset,
+                limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: default.limit,
+                path = call.request.queryParameters["path"] ?: default.path,
+                answer = call.request.queryParameters["answer"]?.toIntOrNull() ?: default.answer,
+            )
         }
     }
 
