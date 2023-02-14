@@ -14,10 +14,6 @@
         <sift>
             <appender name="FILE-${call-id}" class="ch.qos.logback.core.FileAppender">
                 <file>./runtime/debug/${call-id}.debug.log</file>
-                <filter class="com.example.plugins.debug.CallLoggingFilter">
-                    <onMatch>ACCEPT</onMatch>
-                    <onMismatch>DENY</onMismatch>
-                </filter>
                 <append>true</append>
                 <layout class="ch.qos.logback.classic.PatternLayout">
                     <pattern>%d{YYYY-MM-dd HH:mm:ss.SSS} [%thread] %X{call-id} %-5level %logger{36} - %msg%n</pattern>

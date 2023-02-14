@@ -1,0 +1,42 @@
+table
+    thead
+        tr
+            th.date date
+            th.time time
+            th.from from
+            th.requestId requestId
+            th.device device
+            th.deviceId deviceId
+            th.method method
+            th.path path
+            th.processing processing
+            th.answer answer
+            th.trace trace
+            th.log log
+    tbody
+        | {% for request in requests  %}
+        tr
+            td.date {{ request.date }}
+            td.time {{ request.time }}
+            td.from {{ request.from }}
+            td.requestId {{ request.requestId }}
+            td.device {{ request.device }}
+            td.deviceId {{ request.deviceId }}
+            td.method {{ request.method }}
+            td.path {{ request.path }}
+            td.processing {{ request.processing }}
+            td.answer {{ request.answer }}
+            td.trace
+                a(href="{{ request.requestId }}/trace") trace
+            td.log
+                a(href="{{ request.requestId }}") log
+        | {% endfor %}
+
+
+
+
+
+
+
+
+

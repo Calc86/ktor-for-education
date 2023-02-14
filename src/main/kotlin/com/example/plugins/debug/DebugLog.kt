@@ -5,6 +5,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.application.hooks.*
 import io.ktor.server.auth.*
+import io.ktor.server.pebble.*
 import io.ktor.server.plugins.*
 import io.ktor.server.plugins.callid.*
 import io.ktor.server.plugins.callloging.*
@@ -78,17 +79,25 @@ class DebugLog(
                     it.id == id
                 } ?: throw ApiException(HttpStatusCode.NotFound, "request not found")
             }
-            authenticate(configuration.auth) {
-                get(configuration.route) {
-                    entries.update()
-                    entries.clean(configuration.logLimit)
-                    call.respond(entries.requests.map { it.line })  // todo web ui
-                }
-                get(configuration.route + "/{id}") {
-                    call.respondFile(entry(call).request)
-                }
-                get(configuration.route + "/{id}/trace") {
-                    call.respondFile(entry(call).debug)
+            route(configuration.route) {
+                authenticate(configuration.auth) {
+                    get("/test") {
+                        entries.update()
+                        entries.clean(configuration.logLimit)
+                        call.respond(PebbleContent("requests.html", mapOf("requests" to entries.requests.map { it.line }.toList())))
+                        //call.respond(PebbleContent("index.html", mapOf("content" to "content here")))
+                    }
+                    get {
+                        entries.update()
+                        entries.clean(configuration.logLimit)
+                        call.respond(entries.requests.map { it.line })  // todo web ui
+                    }
+                    get("/{id}") {
+                        call.respondFile(entry(call).request)
+                    }
+                    get("/{id}/trace") {
+                        call.respondFile(entry(call).debug)
+                    }
                 }
             }
         }

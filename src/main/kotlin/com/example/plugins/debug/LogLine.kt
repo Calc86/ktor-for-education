@@ -34,8 +34,8 @@ data class LogLine(
                     requestId = fields[3],
                     device = fields[4],
                     deviceId = fields[5],
-                    method = fields[6],
-                    path = fields[7],
+                    method = fields[7],
+                    path = fields[8],
                     answer = fields[10],
                     processing = fields[11],
                 )
